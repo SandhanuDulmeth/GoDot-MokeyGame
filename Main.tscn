@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://tr0k1720v52r"]
+
+[ext_resource type="Script" uid="uid://b88dt1tyl6k8k" path="res://Main.gd" id="1_glv2v"]
+[ext_resource type="PackedScene" uid="uid://dkkm58cdgf8q5" path="res://Ball.tscn" id="2_uu6xs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rxg2q"]
+size = Vector2(390.5, 210.5)
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_glv2v")
+ball_scene = ExtResource("2_uu6xs")
+
+[node name="CounterArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CounterArea"]
+position = Vector2(197.75, 102.75)
+shape = SubResource("RectangleShape2D_rxg2q")
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[node name="CountdownTimer" type="Timer" parent="."]
+
+[node name="CountLabel" type="Label" parent="."]
+offset_left = 251.0
+offset_top = 96.0
+offset_right = 291.0
+offset_bottom = 119.0
+
+[node name="StartButton" type="Button" parent="."]
+texture_filter = 1
+offset_left = 174.0
+offset_top = 91.0
+offset_right = 224.0
+offset_bottom = 122.0
+text = "Start "
+
+[node name="CountdownLabel" type="Label" parent="."]
+offset_left = 251.0
+offset_top = 96.0
+offset_right = 306.0
+offset_bottom = 119.0
+text = "Ready?"
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[connection signal="timeout" from="CountdownTimer" to="." method="_on_countdown_timer_timeout"]
