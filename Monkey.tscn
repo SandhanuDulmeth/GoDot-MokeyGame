@@ -1,11 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://dkkm58cdgf8q5"]
 
-[ext_resource type="Script" uid="uid://bhky0f7e7qcbh" path="res://Ball.gd" id="1_gk6bx"]
+[ext_resource type="Script" uid="uid://bhky0f7e7qcbh" path="res://Monkey.gd" id="1_gk6bx"]
 [ext_resource type="Texture2D" uid="uid://nykgu0p1kjho" path="res://MokeyJump.png" id="2_lww6v"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_gk6bx")
 
-[node name="BallSprite" type="Sprite2D" parent="."]
+[node name="MonkeySprite" type="Sprite2D" parent="."]
+position = Vector2(-1.99988, 4.00003)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_lww6v")

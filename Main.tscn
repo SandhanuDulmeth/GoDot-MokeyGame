@@ -1,45 +1,83 @@
-[gd_scene load_steps=4 format=3 uid="uid://tr0k1720v52r"]
+[gd_scene load_steps=7 format=3 uid="uid://tr0k1720v52r"]
 
 [ext_resource type="Script" uid="uid://b88dt1tyl6k8k" path="res://Main.gd" id="1_glv2v"]
-[ext_resource type="PackedScene" uid="uid://dkkm58cdgf8q5" path="res://Ball.tscn" id="2_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://dkkm58cdgf8q5" path="res://Monkey.tscn" id="2_uu6xs"]
+[ext_resource type="Texture2D" uid="uid://cvt2cilnwmc5k" path="res://Ui-Start.jpeg" id="3_r0du0"]
+[ext_resource type="Texture2D" uid="uid://d2q6os3hpeofi" path="res://StartButton.png" id="4_cm0pq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxg2q"]
-size = Vector2(390.5, 210.5)
+size = Vector2(1147, 648)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_r0du0"]
+load_path = "res://.godot/imported/BackGroundStart.jpeg-46da70963ba3ccb5aaeef464d88c27b7.ctex"
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_glv2v")
 ball_scene = ExtResource("2_uu6xs")
 
+[node name="CountdownTimer" type="Timer" parent="."]
+
 [node name="CounterArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CounterArea"]
-position = Vector2(197.75, 102.75)
+position = Vector2(577.5, 322)
 shape = SubResource("RectangleShape2D_rxg2q")
 
 [node name="SpawnTimer" type="Timer" parent="."]
 
-[node name="CountdownTimer" type="Timer" parent="."]
+[node name="InitialUI" type="CanvasLayer" parent="."]
 
-[node name="CountLabel" type="Label" parent="."]
-offset_left = 251.0
-offset_top = 96.0
-offset_right = 291.0
-offset_bottom = 119.0
-
-[node name="StartButton" type="Button" parent="."]
+[node name="Background" type="TextureRect" parent="InitialUI"]
 texture_filter = 1
-offset_left = 174.0
-offset_top = 91.0
-offset_right = 224.0
-offset_bottom = 122.0
-text = "Start "
+anchors_preset = -1
+anchor_left = 0.00173622
+anchor_top = -0.00308633
+anchor_right = 0.00434038
+anchor_bottom = -0.00308633
+offset_left = -3.00013
+offset_top = -6.86646e-05
+offset_right = 1147.0
+offset_bottom = 650.0
+texture = ExtResource("3_r0du0")
+expand_mode = 1
+stretch_mode = 6
+metadata/_edit_use_anchors_ = true
 
-[node name="CountdownLabel" type="Label" parent="."]
-offset_left = 251.0
-offset_top = 96.0
-offset_right = 306.0
-offset_bottom = 119.0
-text = "Ready?"
+[node name="BackgroundStart" type="TextureRect" parent="InitialUI"]
+visible = false
+visibility_layer = 524289
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = SubResource("CompressedTexture2D_r0du0")
+expand_mode = 1
 
-[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[node name="StartButton" type="Button" parent="InitialUI"]
+texture_filter = 1
+offset_left = 378.0
+offset_top = 170.0
+offset_right = 790.0
+offset_bottom = 494.0
+icon = ExtResource("4_cm0pq")
+
+[node name="CountdownLabel" type="Label" parent="InitialUI"]
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.0
+offset_top = -91.0
+offset_right = 38.0
+offset_bottom = 84.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.839309, 0, 0.143468, 1)
+theme_override_colors/font_shadow_color = Color(0.848068, 0.770202, 0.486222, 1)
+theme_override_font_sizes/font_size = 128
+text = "3"
+
+[node name="LoadingTimer" type="Timer" parent="."]
+
 [connection signal="timeout" from="CountdownTimer" to="." method="_on_countdown_timer_timeout"]
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
