@@ -14,6 +14,14 @@ extends Node2D
 @onready var game_timer: Timer = $GameTimer
 @onready var game_timer_label: Label = $InitialUI/GameTimerLabel
 
+
+@onready var result_ui: CanvasLayer = $ResultUI
+@onready var submit_button: Button = $ResultUI/Panel/SubmitButton
+@onready var line_edit: LineEdit = $ResultUI/Panel/LineEdit
+@onready var result_label: Label = $ResultUI/Panel/ResultLabel
+
+
+
 # Exported variables with type hints
 @export var max_monkeys: int = 10
 @export var spawn_count: int = 5
@@ -32,6 +40,8 @@ func _ready() -> void:
 	game_active = false
 	background_start.visible = false
 	start_button.visible = false
+	result_ui.visible = false
+	background.visible = true
 	
 	# Set timer properties
 	spawn_timer.wait_time = spawn_interval
@@ -52,15 +62,17 @@ func _ready() -> void:
 	_safe_signal_connections()
 
 func _safe_signal_connections() -> void:
-	if start_button:
+	if start_button and not start_button.pressed.is_connected(_on_start_button_pressed):
 		start_button.pressed.connect(_on_start_button_pressed)
-	if countdown_timer:
+	if countdown_timer and not countdown_timer.timeout.is_connected(_on_countdown_timer_timeout):
 		countdown_timer.timeout.connect(_on_countdown_timer_timeout)
-	if spawn_timer:
+	if spawn_timer and not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
 		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
-	if counter_area:
+	if counter_area and not counter_area.body_entered.is_connected(_on_counter_area_body_entered):
 		counter_area.body_entered.connect(_on_counter_area_body_entered)
-
+	if submit_button and not submit_button.pressed.is_connected(_on_submit_button_pressed):
+		submit_button.pressed.connect(_on_submit_button_pressed)
+		
 func _on_initial_loading_complete():
 	start_button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 	start_button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
@@ -103,6 +115,7 @@ func _on_game_timer_timeout():
 		monkey.can_move = false
 	countdown_label.text = "TIME'S UP!"
 	countdown_label.visible = true
+	show_result_ui()
 
 func _on_spawn_timer_timeout() -> void:
 	if not game_active:
@@ -153,7 +166,10 @@ func reset_game() -> void:
 	if game_timer.is_connected("timeout", _on_game_timer_timeout):
 		game_timer.timeout.disconnect(_on_game_timer_timeout)
 	game_timer.timeout.connect(_on_game_timer_timeout)
-
+	result_ui.visible = false
+	submit_button.disabled = false
+	line_edit.text = ""
+	result_label.text = ""
 func _process(delta):
 	if updating_timer:
 		var time_left_int = int(ceil(game_timer.time_left))
@@ -161,3 +177,49 @@ func _process(delta):
 		var seconds = time_left_int % 60
 		game_timer_label.text = "%02d:%02d" % [minutes, seconds]
 		#print("Time left: ", game_timer.time_left)
+		
+func show_result_ui() -> void:
+	result_ui.visible = true
+
+func _on_submit_button_pressed() -> void:
+	# Clear previous result (assuming you have a label to display results)
+	result_label.text = ""
+	
+	# Get and validate the player's input from a LineEdit node
+	var input_text = line_edit.text.strip_edges()
+	
+	# Check for empty input
+	if input_text.is_empty():
+		result_label.text = "Please enter a number!"
+		result_label.visible = true
+		return
+	
+	# Check for valid integer input
+	if !input_text.is_valid_int():
+		result_label.text = "Numbers only please!"
+		result_label.visible = true
+		return
+	
+	# Convert input to integer and get the actual count
+	var player_guess = int(input_text)
+	var actual_count = GameState.monkeys_entered  # Use the correct count from GameState
+	
+	# Calculate the difference
+	var difference = abs(actual_count - player_guess)
+	
+	# Display the result
+	result_label.text = """Your guess: {guess}
+	Actual count: {actual}
+	Difference: {diff}""".format({
+		"guess": player_guess,
+		"actual": actual_count,
+		"diff": difference
+	})
+	
+	# Show the result and disable the submit button
+	result_label.visible = true
+	submit_button.disabled = true
+	
+	# Debug output
+	print("Player guessed: ", player_guess)
+	print("Actual count: ", actual_count)
