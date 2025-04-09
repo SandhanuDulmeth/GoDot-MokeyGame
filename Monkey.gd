@@ -8,7 +8,7 @@ var counting_active: bool = true  # Control whether counting is active
 var target_rect := Rect2(0, 0, 1150, 650)
 
 var direction: Vector2
-
+var can_move := true
 @export var min_speed = 150
 @export var max_speed = 500
 
@@ -30,17 +30,18 @@ func _ready() -> void:
 		randf_range(0.7, 1.0)
 	)
 func _process(delta: float) -> void:
-	position += velocity * delta
-	var screen_size = get_viewport_rect().size
+	if can_move:
+		position += velocity * delta
+		var screen_size = get_viewport_rect().size
 	
-	# Only count if counting is still active
-	if counting_active and not has_entered and target_rect.has_point(position):
-		has_entered = true
-		GameState.monkeys_entered += 1
-		print("Monkeys entered: ", GameState.monkeys_entered)
+		# Only count if counting is still active
+		if counting_active and not has_entered and target_rect.has_point(position):
+			has_entered = true
+			GameState.monkeys_entered += 1
+			print("Monkeys entered: ", GameState.monkeys_entered)
 	
-	if position.x < -50 or position.x > screen_size.x + 50 or position.y < -50 or position.y > screen_size.y + 50:
-		queue_free()
+		if position.x < -50 or position.x > screen_size.x + 50 or position.y < -50 or position.y > screen_size.y + 50:
+			queue_free()
 
 func _on_counting_timeout():
 	counting_active = false

@@ -44,7 +44,6 @@ stretch_mode = 6
 metadata/_edit_use_anchors_ = true
 
 [node name="BackgroundStart" type="TextureRect" parent="InitialUI"]
-visible = false
 visibility_layer = 524289
 offset_right = 1152.0
 offset_bottom = 648.0
@@ -77,7 +76,18 @@ theme_override_colors/font_shadow_color = Color(0.848068, 0.770202, 0.486222, 1)
 theme_override_font_sizes/font_size = 128
 text = "3"
 
+[node name="GameTimerLabel" type="Label" parent="InitialUI"]
+texture_filter = 1
+anchors_preset = -1
+offset_left = 794.0
+offset_top = 8.0
+offset_right = 1136.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 48
+
 [node name="LoadingTimer" type="Timer" parent="."]
+
+[node name="GameTimer" type="Timer" parent="."]
 
 [connection signal="timeout" from="CountdownTimer" to="." method="_on_countdown_timer_timeout"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
